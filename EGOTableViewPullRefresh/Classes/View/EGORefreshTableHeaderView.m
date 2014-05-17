@@ -129,6 +129,29 @@
 
 }
 
+-(void)setCustomLoadingViewWithImage:(UIImage*)loadingImage{
+    [_activityView removeFromSuperview];
+    customActivityImageView = [[UIImageView alloc]initWithImage:loadingImage];
+    [customActivityImageView setFrame:CGRectMake((self.frame.size.width - loadingImage.size.width)/2, self.frame.size.height-38, loadingImage.size.width, loadingImage.size.height)];
+    [self addSubview:customActivityImageView];
+    [customActivityImageView setHidden:YES];
+}
+
+
+-(void)rotateLoader{
+    [customActivityImageView setHidden:NO];
+    [UIView animateWithDuration:0.05 animations:^{
+        CGAffineTransform transform = CGAffineTransformRotate(customActivityImageView.transform, + M_PI_4/2  );
+        customActivityImageView.transform = transform;
+    } completion:^(BOOL finished) {
+        if (_state == EGOOPullRefreshLoading) {
+            [self rotateLoader];
+        }else{
+            [customActivityImageView setHidden:YES];
+        }
+    }];
+}
+
 - (void)setState:(EGOPullRefreshState)aState{
 	
 	switch (aState) {
@@ -151,7 +174,10 @@
 			}
 			
 			_statusLabel.text = NSLocalizedString(@"Pull down to refresh...", @"Pull down to refresh status");
-			[_activityView stopAnimating];
+            if (!customActivityImageView) {
+                [_activityView stopAnimating];
+            }
+
 			[CATransaction begin];
 			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
 			_arrowImage.hidden = NO;
@@ -163,8 +189,13 @@
 			break;
 		case EGOOPullRefreshLoading:
 			
-			_statusLabel.text = NSLocalizedString(@"Loading...", @"Loading Status");
-			[_activityView startAnimating];
+            if (customActivityImageView) {
+                [self rotateLoader];
+                _statusLabel.text =@"";
+            }else{
+                [_activityView startAnimating];
+                _statusLabel.text = NSLocalizedString(@"Loading...", @"Loading Status");
+            }
 			[CATransaction begin];
 			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
 			_arrowImage.hidden = YES;
