@@ -186,7 +186,9 @@
 		case EGOOPullRefreshLoading:
 			
             if (customActivityImageView) {
-                [self rotateLoader];
+                if (customActivityImageView.hidden) {
+                    [self rotateLoader];
+                }
                 _statusLabel.text =@"";
             }else{
                 [_activityView startAnimating];
@@ -245,11 +247,13 @@
 		_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
 	}
 	
-	if (scrollView.contentOffset.y <= - 65.0f && !_loading) {
+	if (scrollView.contentOffset.y <= - 65.0f) {
 		
-		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
-			[_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
-		}
+        if (!_loading) {
+            if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
+                [_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
+            }            
+        }
 		
 		[self setState:EGOOPullRefreshLoading];
 		[UIView beginAnimations:nil context:NULL];
