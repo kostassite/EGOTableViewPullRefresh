@@ -45,6 +45,8 @@ typedef enum{
 	UIActivityIndicatorView *_activityView;
 	
     UIImageView *customActivityImageView;
+    
+    int clockwise; // 1 or -1
 }
 
 @property(nonatomic,assign) id <EGORefreshTableHeaderDelegate> delegate;
@@ -52,6 +54,7 @@ typedef enum{
 - (id)initWithFrame:(CGRect)frame arrowImageName:(NSString *)arrow textColor:(UIColor *)textColor;
 
 -(void)setCustomLoadingViewWithImage:(UIImage*)loadingImage;
+-(void)setCustomLoadingViewWithImage:(UIImage*)loadingImage rotatesClockwise:(BOOL)clockwise;
 
 - (void)refreshLastUpdatedDate;
 - (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView;
