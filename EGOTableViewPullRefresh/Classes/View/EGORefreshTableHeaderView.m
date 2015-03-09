@@ -128,7 +128,7 @@
 -(void)setCustomLoadingViewWithImage:(UIImage*)loadingImage{
     [_activityView removeFromSuperview];
     customActivityImageView = [[UIImageView alloc]initWithImage:loadingImage];
-    [customActivityImageView setFrame:CGRectMake((self.frame.size.width - loadingImage.size.width)/2, self.frame.size.height-38, loadingImage.size.width, loadingImage.size.height)];
+    [customActivityImageView setFrame:CGRectMake((([[UIScreen mainScreen] bounds].size.width) - loadingImage.size.width)/2, self.frame.size.height-38, loadingImage.size.width, loadingImage.size.height)];
     [self addSubview:customActivityImageView];
     [customActivityImageView setHidden:YES];
 }
