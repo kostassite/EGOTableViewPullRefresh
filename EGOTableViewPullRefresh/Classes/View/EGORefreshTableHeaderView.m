@@ -126,6 +126,16 @@
 }
 
 -(void)setCustomLoadingViewWithImage:(UIImage*)loadingImage{
+    [self setCustomLoadingViewWithImage:loadingImage rotatesClockwise:NO];
+}
+
+-(void)setCustomLoadingViewWithImage:(UIImage*)loadingImage rotatesClockwise:(BOOL)_clockwise{
+    if (_clockwise) {
+        clockwise = -1;
+    }else{
+        clockwise = 1;
+    }
+    
     [_activityView removeFromSuperview];
     customActivityImageView = [[UIImageView alloc]initWithImage:loadingImage];
     [customActivityImageView setFrame:CGRectMake((([[UIScreen mainScreen] bounds].size.width) - loadingImage.size.width)/2, self.frame.size.height-38, loadingImage.size.width, loadingImage.size.height)];
@@ -137,7 +147,7 @@
 -(void)rotateLoader{
     [customActivityImageView setHidden:NO];
     [UIView animateWithDuration:0.05 animations:^{
-        CGAffineTransform transform = CGAffineTransformRotate(customActivityImageView.transform, + M_PI_4/2  );
+        CGAffineTransform transform = CGAffineTransformRotate(customActivityImageView.transform, clockwise * M_PI_4/2  );
         customActivityImageView.transform = transform;
     } completion:^(BOOL finished) {
         if (_state == EGOOPullRefreshLoading) {
